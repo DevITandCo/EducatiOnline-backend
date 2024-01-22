@@ -28,6 +28,14 @@
 
 ### Run for a development environment
 
+First you neeed to install de dependencies
+
+```bash
+npm install
+```
+
+And then run 
+
 ```bash
 npm run ci
 npm run dev
