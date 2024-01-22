@@ -24,6 +24,12 @@
 - `api/public`: This directory contains the files needed for generating the API documentation through a deployment in a website.
 - `api/routes`: This directory contains the application's routing files, which map URLs to specific controllers and actions.
 
+## Configuration Files
+- `.env.example`: Provides an example configuration of environment variables, guiding developers to set up their local environment by copying this file as .env with specific variable values.
+- `.eslintrc.json`: Configures ESLint, a linting tool for JavaScript and TypeScript, defining rules to enhance code consistency and quality.
+- `mocharc.json `: Configuration file for Mocha, a JavaScript testing framework, specifying options for test execution.
+- `.prettierrc.json`: Configuration for Prettier, a code formatting tool, ensuring a consistent and readable code style across the project.
+
 ## Getting Started
 
 ### Run for a development environment
