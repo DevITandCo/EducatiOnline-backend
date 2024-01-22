@@ -10,3 +10,6 @@ package-lock.json
 # MongoDB
 data/
 dump/
+
+# macOS
+.DS_Store
