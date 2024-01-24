@@ -10,25 +10,27 @@
 ![Mocha](https://img.shields.io/badge/-mocha-%238D6748?style=for-the-badge&logo=mocha&logoColor=white)
 
 ## General Architecture
-![Architecture](/generalArchitecture.png)
+![Architecture](/docs/generalArchitecture.png)
 
 
 
 ## Folder structure
 
 - `app.ts`: Entry point of our application and where we will set up our server.
+- `public`: This directory contains the files needed for generating the API documentation through a deployment in a website.
+- `lib`: This directory contains the files needed for configure the conexion to the database and other utils.
 - `test`: This directory test to check the correct operation of the application.
-- `api/controllers`: This directory contains the application's controllers, which are responsible for handling user input and updating the model and view accordingly.
-- `api/middleware`: This folder stores intermediate functionalities that act as middelwares for filtering certain requests.
-- `api/models`: This directory contains the application's data models, which are responsible for handling data and business logic.
-- `api/public`: This directory contains the files needed for generating the API documentation through a deployment in a website.
-- `api/routes`: This directory contains the application's routing files, which map URLs to specific controllers and actions.
+- `api_server/controllers`: This directory contains the application's controllers, which are responsible for handling user input and updating the model and view accordingly.
+- `api_server/middleware`: This folder stores intermediate functionalities that act as middelwares for filtering certain requests.
+- `api_server/models`: This directory contains the application's data models, which are responsible for handling data and business logic.
+- `api_server/routes`: This directory contains the application's routing files, which map URLs to specific controllers and actions.
 
 ## Configuration Files
 - `.env.example`: Provides an example configuration of environment variables, guiding developers to set up their local environment by copying this file as .env with specific variable values.
-- `.eslintrc.json`: Configures ESLint, a linting tool for JavaScript and TypeScript, defining rules to enhance code consistency and quality.
 - `mocharc.json `: Configuration file for Mocha, a JavaScript testing framework, specifying options for test execution.
 - `.prettierrc.json`: Configuration for Prettier, a code formatting tool, ensuring a consistent and readable code style across the project.
+- `env.example`: Configuration of enviroment variables
+
 
 ## Getting Started
 
