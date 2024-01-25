@@ -14,10 +14,7 @@ export const createArticle = async (req: Request, res: Response): Promise<void> 
 
     res.status(201).json({
       data: {
-        id: newArticle.id,
-        title,
-        description,
-        content
+        newArticle
       },
       status: setStatus(req, 201, 'OK CREATED')
     })
@@ -45,10 +42,7 @@ export const updateArticle = async (req: Request, res: Response): Promise<void> 
 
     res.status(201).json({
       data: {
-        id: newArticle.id,
-        title: newArticle.title,
-        description: newArticle.description,
-        content: newArticle.content
+        newArticle
       },
       status: setStatus(req, 201, 'OK CREATED')
     })
@@ -63,7 +57,7 @@ export const deleteArticle = async (req: Request, res: Response): Promise<void> 
   try {
     const { id } = req.body
 
-    const existingArticle = await ArticleModel.findOneAndDelete({ id })
+    const existingArticle = await ArticleModel.findByIdAndDelete({ id })
     if (existingArticle == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
@@ -84,18 +78,15 @@ export const getArticle = async (req: Request, res: Response): Promise<void> => 
   try {
     const { id } = req.body
 
-    const existingArticle = await ArticleModel.findOne({ id })
+    const existingArticle = await ArticleModel.findById(id)
     if (existingArticle == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
 
-    res.status(201).json({
+    res.status(200).json({
       data: {
-        id: id,
-        title: existingArticle.title,
-        description: existingArticle.description,
-        content: existingArticle.content
+        existingArticle
       },
       status: setStatus(req, 200, 'OK')
     })
@@ -109,13 +100,13 @@ export const getArticle = async (req: Request, res: Response): Promise<void> => 
 export const getArticles = async (req: Request, res: Response): Promise<void> => {
   try {
 
-    const existingArticle = await ArticleModel.find({})
+    const existingArticle = await ArticleModel.find({}, 'id title')
     if (existingArticle == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
 
-    res.status(201).json({
+    res.status(200).json({
       data: {
         existingArticle
       },
