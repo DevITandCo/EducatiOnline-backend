@@ -5,7 +5,7 @@ import { ArticleModel } from '@/api_server/models/article'
 export const createArticle = async (req: Request, res: Response): Promise<void> => {
   try {
     const { title, description, content } = req.body
-
+    
     const newArticle = await ArticleModel.create({
       title,
       description,
@@ -28,7 +28,7 @@ export const createArticle = async (req: Request, res: Response): Promise<void> 
 export const updateArticle = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id, title, description, content } = req.body
-
+    
     const newArticle = await ArticleModel.findByIdAndUpdate({_id: id}, {
       id,
       title,
@@ -76,8 +76,9 @@ export const deleteArticle = async (req: Request, res: Response): Promise<void> 
 
 export const getArticle = async (req: Request, res: Response): Promise<void> => {
   try {
-    // const { id } = req.body
-    const id = req.url.split('=')[1]
+    // console.log(req.params) // is empty (?)
+    // parsing id in URL (/article/get?id=value)
+    const id = req.url.split('?')[1].split('=')[1]
     
     const existingArticle = await ArticleModel.findById({_id: id})
     if (existingArticle == null) {
