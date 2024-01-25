@@ -14,8 +14,8 @@ COPY package*.json ./
 RUN npm install -g npm@latest
 RUN npm ci --omit=dev --ignore-scripts
 
-# Copy the built app source
-COPY ./build/app.min.js .
+# Copy the entire source code
+COPY . .
 
 # Expose the required ports
 EXPOSE 3000
@@ -24,4 +24,4 @@ EXPOSE 3000
 USER express
 
 # Run the Node.js app
-CMD ["node", "app.min.js"]
+CMD ["node", "app.ts"]
