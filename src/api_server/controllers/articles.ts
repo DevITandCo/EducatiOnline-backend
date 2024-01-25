@@ -76,9 +76,9 @@ export const deleteArticle = async (req: Request, res: Response): Promise<void> 
 
 export const getArticle = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.body
-
-    // console.log(id)
+    // const { id } = req.body
+    const id = req.url.split('=')[1]
+    
     const existingArticle = await ArticleModel.findById({_id: id})
     if (existingArticle == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
