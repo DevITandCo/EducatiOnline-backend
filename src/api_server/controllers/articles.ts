@@ -29,7 +29,7 @@ export const updateArticle = async (req: Request, res: Response): Promise<void> 
   try {
     const { id, title, description, content } = req.body
 
-    const newArticle = await ArticleModel.findByIdAndUpdate(id, {
+    const newArticle = await ArticleModel.findByIdAndUpdate({_id: id}, {
       id,
       title,
       description,
@@ -57,7 +57,7 @@ export const deleteArticle = async (req: Request, res: Response): Promise<void> 
   try {
     const { id } = req.body
 
-    const existingArticle = await ArticleModel.findByIdAndDelete(id)
+    const existingArticle = await ArticleModel.findByIdAndDelete({_id: id})
     if (existingArticle == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
@@ -78,7 +78,8 @@ export const getArticle = async (req: Request, res: Response): Promise<void> => 
   try {
     const { id } = req.body
 
-    const existingArticle = await ArticleModel.findById(id)
+    // console.log(id)
+    const existingArticle = await ArticleModel.findById({_id: id})
     if (existingArticle == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
