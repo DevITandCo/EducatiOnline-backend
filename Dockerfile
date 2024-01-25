@@ -12,7 +12,7 @@ RUN chown -R express:nodejs /usr/src/app
 # Install app dependencies
 COPY package*.json ./
 RUN npm install -g npm@latest
-RUN npm ci --omit=dev --ignore-scripts
+RUN npm install --omit=dev --ignore-scripts
 
 # Copy the entire source code
 COPY . .
