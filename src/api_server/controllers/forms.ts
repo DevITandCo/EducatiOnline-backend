@@ -1,22 +1,22 @@
 import { Request, Response } from 'express'
 import { setStatus } from '@/lib/utils'
-import { ArticleModel } from '@/api_server/models/article'
+import { FormModel } from '@/api_server/models/form'
 
-export const createArticle = async (req: Request, res: Response): Promise<void> => {
+export const createForm = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, description, content } = req.body
+    const { category, author, content } = req.body
 
-    const newArticle = await ArticleModel.create({
-      title,
-      description,
+    const newForm = await FormModel.create({
+      category,
+      author,
       content
     })
 
     res.status(201).json({
       data: {
-        id: newArticle.id,
-        title,
-        description,
+        id: newForm.id,
+        category,
+        author,
         content
       },
       status: setStatus(req, 201, 'OK CREATED')
@@ -28,27 +28,27 @@ export const createArticle = async (req: Request, res: Response): Promise<void> 
   }
 }
 
-export const updateArticle = async (req: Request, res: Response): Promise<void> => {
+export const updateForm = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, title, description, content } = req.body
-
-    const newArticle = await ArticleModel.findByIdAndUpdate(id, {
+    const { id, category, author, content } = req.body
+    
+    const newForm = await FormModel.findByIdAndUpdate(id, {
       id,
-      title,
-      description,
+      category,
+      author,
       content
     }, {new: true})
-    if (newArticle == null) {
+    if (newForm == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
 
     res.status(201).json({
       data: {
-        id: newArticle.id,
-        title: newArticle.title,
-        description: newArticle.description,
-        content: newArticle.content
+        id: newForm.id,
+        category: newForm.category,
+        author: newForm.author,
+        content: newForm.content
       },
       status: setStatus(req, 201, 'OK CREATED')
     })
@@ -59,12 +59,12 @@ export const updateArticle = async (req: Request, res: Response): Promise<void> 
   }
 }
 
-export const deleteArticle = async (req: Request, res: Response): Promise<void> => {
+export const deleteForm = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.body
 
-    const existingArticle = await ArticleModel.findOneAndDelete({ id })
-    if (existingArticle == null) {
+    const existingForm = await FormModel.findOneAndDelete({ id })
+    if (existingForm == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
@@ -80,12 +80,12 @@ export const deleteArticle = async (req: Request, res: Response): Promise<void> 
 }
 
 
-export const getArticle = async (req: Request, res: Response): Promise<void> => {
+export const getForm = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.body
 
-    const existingArticle = await ArticleModel.findOne({ id })
-    if (existingArticle == null) {
+    const existingForm = await FormModel.findOne({ id })
+    if (existingForm == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
@@ -93,9 +93,9 @@ export const getArticle = async (req: Request, res: Response): Promise<void> => 
     res.status(201).json({
       data: {
         id: id,
-        title: existingArticle.title,
-        description: existingArticle.description,
-        content: existingArticle.content
+        category: existingForm.category,
+        author: existingForm.author,
+        content: existingForm.content
       },
       status: setStatus(req, 200, 'OK')
     })
@@ -106,18 +106,18 @@ export const getArticle = async (req: Request, res: Response): Promise<void> => 
   }
 }
 
-export const getArticles = async (req: Request, res: Response): Promise<void> => {
+export const getForms = async (req: Request, res: Response): Promise<void> => {
   try {
 
-    const existingArticle = await ArticleModel.find({})
-    if (existingArticle == null) {
+    const existingForm = await FormModel.find({})
+    if (existingForm == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
 
     res.status(201).json({
       data: {
-        existingArticle
+        existingForm
       },
       status: setStatus(req, 200, 'OK')
     })

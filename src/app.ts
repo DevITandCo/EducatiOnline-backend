@@ -11,6 +11,7 @@ import { connectDB } from '@/lib/database'
 import healthRouter from '@/api_server/routes/health'
 import authRouter from '@/api_server/routes/auth'
 import articleRouter from '@/api_server/routes/articles'
+import formRouter from '@/api_server/routes/forms'
 
 connectDB()
   .then(() => console.log('MongoDB has been connected'))
@@ -34,6 +35,7 @@ app.use('/v1', stamp)
 app.use('/v1/health', healthRouter)
 app.use('/v1/auth', authRouter)
 app.use('/v1/article', articleRouter)
+app.use('/v1/contact', formRouter)
 
 app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
   if (!err.status) {
