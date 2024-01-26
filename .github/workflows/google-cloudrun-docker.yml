@@ -88,6 +88,8 @@ jobs:
     - name: Configure Docker Client
       run: |
         gcloud auth configure-docker gcr.io --quiet
+        docker-credential-gcr configure-docker
+
     
     - name: Push Docker Image to Container Registry (GCR)
       run: |
