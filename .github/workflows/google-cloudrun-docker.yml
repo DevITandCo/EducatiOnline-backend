@@ -91,8 +91,8 @@ jobs:
     
     - name: Tag Docker Image
       run: |
-        docker tag $IMAGE_NAME:latest gcr.io/astral-option-412114/apieduconline:latest
-    
+        docker tag gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest gcr.io/astral-option-412114/apieduconline:latest
+        
     - name: Push Docker Image to Container Registry (GCR)
       run: |
         docker push gcr.io/astral-option-412114/apieduconline:latest
