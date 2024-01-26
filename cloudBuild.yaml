@@ -1,0 +1,55 @@
+_SUBSTITUTIONS:
+  - REPO_URL: "https://github.com/DevITandCo/EDUconline-backend"
+  - PROJECT_ID: "astral-option-412114"
+  - IMAGE_NAME: "apiEduconline"
+  - SERVICE_NAME: "backend"
+  - REGION: "europe-west9"
+  - CONCURRENCY: "80"
+  - TIMEOUT: "180s"
+  - MEMORY: "256Mi"
+  - ENV_VARS: "MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority"
+  - REPO_DIR: "/workspace/backend"
+
+# Eliminar la carpeta /workspace si existe
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - 'rm -rf /workspace || true'
+
+# Clonar el repositorio en REPO_DIR
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone', '$REPO_URL', '$REPO_DIR']
+
+# Construir la imagen de Docker
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/$IMAGE_NAME', '-f', '$REPO_DIR/Dockerfile', '$REPO_DIR']
+
+# Empujar la imagen de Docker a gcr.io
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$IMAGE_NAME']
+
+# Desplegar la aplicación en Google Cloud Run
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+    - 'run'
+    - 'deploy'
+    - '$SERVICE_NAME'
+    - '--image'
+    - 'gcr.io/$PROJECT_ID/$IMAGE_NAME'
+    - '--region'
+    - '$REGION'
+    - '--platform'
+    - 'managed'
+    - '--allow-unauthenticated'
+    - '--concurrency'
+    - '$CONCURRENCY'
+    - '--timeout'
+    - '$TIMEOUT'
+    - '--memory'
+    - '$MEMORY'
+    - '--set-env-vars'
+    - '$ENV_VARS'
+
+images:
+- 'gcr.io/$PROJECT_ID/$IMAGE_NAME'
