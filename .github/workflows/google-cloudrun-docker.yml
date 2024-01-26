@@ -84,7 +84,8 @@ jobs:
       - name: Build and Push Container
         run: |-
           docker build -t "europe-west9-docker.pkg.dev/astral-option-412114/apiservice:bc7accddca83abde880bfcd7be282d9d1afcfeab" ./
-          docker push --verbose "europe-west9-docker.pkg.dev/astral-option-412114/apiservice:bc7accddca83abde880bfcd7be282d9d1afcfeab
+          docker push --verbose "europe-west9-docker.pkg.dev/astral-option-412114/apiservice:bc7accddca83abde880bfcd7be282d9d1afcfeab"
+    
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v0
