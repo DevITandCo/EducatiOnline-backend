@@ -77,7 +77,12 @@ jobs:
         if [ $? -ne 0 ]; then
           echo "Failed to build Docker image. Exiting..."
           exit 1
+        else
+          echo "Docker image built successfully."
         fi
+
+    - name: List Docker Images
+      run: docker images
 
     - name: Configure Docker Client
       run: gcloud auth configure-docker --quiet
@@ -88,14 +93,6 @@ jobs:
         if [ $? -ne 0 ]; then
           echo "Failed to push Docker image to GCR. Exiting..."
           exit 1
+        else
+          echo "Docker image pushed successfully."
         fi
-
-
-    # - name: Push Docker Image to Artifact Registry
-     # env:
-      #  GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
-     # run: |-
-        #docker tag $IMAGE_NAME:latest europe-west9.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
-        #docker tag $IMAGE_NAME:latest europe-west9.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
-       # docker push europe-west9.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
-       # docker push europe-west9.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
