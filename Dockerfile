@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:14.17-alpine
 
 # Create a non-root user
 RUN addgroup -S nodejs && adduser -S express -G nodejs
@@ -11,7 +11,6 @@ RUN chown -R express:nodejs /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
-RUN npm install -g npm@latest
 RUN npm install --omit=dev --ignore-scripts
 
 # Copy the entire source code
@@ -23,6 +22,5 @@ EXPOSE 3000
 # Switch to the non-root user before running the app
 USER express
 
-# Run the Node.js app
-CMD ["node", "app.ts"]
-#test
+# Compile TypeScript (if applicable) and run the Node.js app
+CMD ["node", "app.js"]  # Assuming you compile TypeScript to app.js
