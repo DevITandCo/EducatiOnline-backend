@@ -85,8 +85,9 @@ jobs:
       run: docker images
 
     - name: Configure Docker Client
-      run: gcloud auth configure-docker --quiet
-
+      run: |
+        gcloud auth configure-docker gcr.io --quiet
+    
     - name: Push Docker Image to Container Registry (GCR)
       run: |
         docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest
