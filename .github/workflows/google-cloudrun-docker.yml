@@ -87,15 +87,16 @@ jobs:
 
     - name: Configure Docker Client
       run: |
-        gcloud auth configure-docker gcr.io --quiet
-
+        gcloud auth configure-docker --quiet
     
     - name: Push Docker Image to Container Registry (GCR)
       run: |
-        docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest
+        docker tag $IMAGE_NAME:latest gcr.io/astral-option-412114/apieduconline:latest
+        docker push gcr.io/astral-option-412114/apieduconline:latest
         if [ $? -ne 0 ]; then
           echo "Failed to push Docker image to GCR. Exiting..."
           exit 1
         else
           echo "Docker image pushed successfully."
         fi
+
