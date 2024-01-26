@@ -1,14 +1,14 @@
 _SUBSTITUTIONS:
-  - REPO_URL: "https://github.com/DevITandCo/EDUconline-backend"
-  - PROJECT_ID: "astral-option-412114"
-  - IMAGE_NAME: "apiEduconline"
-  - SERVICE_NAME: "backend"
-  - REGION: "europe-west9"
-  - CONCURRENCY: "80"
-  - TIMEOUT: "180s"
-  - MEMORY: "256Mi"
-  - ENV_VARS: "MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority"
-  - REPO_DIR: "/workspace/backend"
+  REPO_URL: "https://github.com/DevITandCo/EDUconline-backend"
+  PROJECT_ID: "astral-option-412114"
+  IMAGE_NAME: "apiEduconline"
+  SERVICE_NAME: "backend"
+  REGION: "europe-west9"
+  CONCURRENCY: "80"
+  TIMEOUT: "180s"
+  MEMORY: "256Mi"
+  ENV_VARS: "MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority"
+  REPO_DIR: "/workspace/backend"
 
 # Eliminar la carpeta /workspace si existe
 - name: 'gcr.io/cloud-builders/gcloud'
