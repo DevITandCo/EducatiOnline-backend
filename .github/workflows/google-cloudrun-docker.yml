@@ -103,5 +103,13 @@ jobs:
           echo "Docker image pushed successfully."
         fi
 
+    - name: Debug Information
+      run: |
+        echo "GitHub Context:"
+        env | sort
+        gcloud auth list
+        gcloud config list
+
+
 
 
