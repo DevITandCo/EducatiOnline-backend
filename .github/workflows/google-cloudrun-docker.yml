@@ -45,20 +45,16 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
 
 env:
   PROJECT_ID: astral-option-412114
   GAR_LOCATION: europe-west9
-  SERVICE: dockereduconline  # Cambié "apiservice" a "dockereduconline"
+  SERVICE: apiservice
   REGION: europe-west9
 
 jobs:
   deploy:
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -69,20 +65,13 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-          export_environment_variables: true
-          universe: googleapis.com
-          cleanup_credentials: true
-          access_token_lifetime: 3600s
-          access_token_scopes: https://www.googleapis.com/auth/cloud-platform
-          retries: 3
-          backoff: 250
-          id_token_include_email: false
+          create_credentials_file: true
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
         env:
-          PROJECT_ID: ${{ env.PROJECT_ID }}
-          GAR_LOCATION: ${{ env.GAR_LOCATION }}
-          SERVICE: ${{ env.SERVICE }}
-          REGION: ${{ env.REGION }}
+          PROJECT_ID: astral-option-412114
+          GAR_LOCATION: europe-west9
+          SERVICE: apiservice
+          REGION: europe-west9
 
       - name: Docker Auth
         id: docker-auth
@@ -93,7 +82,7 @@ jobs:
           registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
 
       - name: Build and Push Container
-        run: |
+        run: |-
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
 
@@ -103,6 +92,7 @@ jobs:
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          image: "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
 
-      - name: Show Outp
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
