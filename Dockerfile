@@ -1,27 +1,26 @@
-FROM node:20-alpine
+# Utiliza la imagen oficial de Node.js con la versión que necesitas
+FROM node:14-alpine
 
-# Create a non-root user
+# Crea un usuario no root
 RUN addgroup -S nodejs && adduser -S express -G nodejs
 
-# Set the working directory for the app
+# Establece el directorio de trabajo en /usr/src/app
 WORKDIR /usr/src/app
 
-# Give ownership of the working directory to the non-root user
-RUN chown -R express:nodejs /usr/src/app
+# Copia los archivos necesarios para instalar dependencias
+COPY package*.json tsconfig*.json ./
 
-# Install app dependencies
-COPY package*.json ./
-RUN npm install -g npm@latest
-RUN npm install --omit=dev --ignore-scripts
+# Instala TypeScript y las dependencias
+RUN npm install -g npm@latest typescript && npm install
 
-# Copy the built app source
-COPY ./build/app.min.js .
+# Copia el resto del código fuente
+COPY . .
 
-# Expose the required ports
-EXPOSE 3000
+# Compila el código TypeScript
+RUN tsc
 
-# Switch to the non-root user before running the app
+# Cambia al usuario no root antes de ejecutar la aplicación
 USER express
 
-# Run the Node.js app
-CMD ["node", "app.min.js"]
+# Ejecuta la aplicación
+CMD ["node", "dist/app.js"]
