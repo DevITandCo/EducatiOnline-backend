@@ -18,7 +18,6 @@ steps:
 # Empujar la imagen de Docker a gcr.io
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/astral-option-412114/apieduconline']
-
   
 # Desplegar la aplicación en Google Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -41,7 +40,12 @@ steps:
   - '256Mi'
   - '--set-env-vars'
   - 'MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority'
-  
+
+# Incluye la configuración del cubo de registros
+options:
+  build:
+    logsBucket: 'gs://educonline_bucket'
+
 images:
 - 'gcr.io/astral-option-412114/apieduconline'
 
