@@ -1,5 +1,5 @@
 {
-  "name": "express-template",
+  "name": "api-educonline",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
@@ -12,7 +12,6 @@
     "build": "tsc --project tsconfig.build.json && tsc-alias && esbuild build/app.js --bundle --minify --platform=node --outfile=build/app.min.js && copyfiles -u 1 src/public/**/* build/",
     "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config src/app.ts",
     "test": "nyc mocha --exit",
-    "lint": "prettier --write src/**/*.ts && eslint src",
     "prepare": "husky install"
   },
   "dependencies": {
