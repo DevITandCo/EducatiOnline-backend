@@ -9,6 +9,10 @@ steps:
 # Clonar el repositorio en /workspace/backend
 - name: 'gcr.io/cloud-builders/git'
   args: ['clone', "https://github.com/DevITandCo/EDUconline-backend", '/workspace/backend']
+  options:
+  logging:
+    options:
+      defaultLogsBucketBehavior: 'REGIONAL_USER_OWNED_BUCKET'
 
 # Construir la imagen de Docker
 - name: 'gcr.io/cloud-builders/docker'
