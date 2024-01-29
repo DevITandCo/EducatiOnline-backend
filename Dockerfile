@@ -19,7 +19,10 @@ COPY . .
 RUN npm install
 
 # Expón el puerto en el que la aplicación ejecuta
-EXPOSE 3000
+EXPOSE 8080
+
+# Variable de entorno para la cadena de conexión de MongoDB Atlas
+ENV MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority
 
 # Switch to the non-root user before running the app
 USER express
