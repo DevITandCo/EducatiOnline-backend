@@ -9,7 +9,6 @@ steps:
 # Clonar el repositorio en /workspace/backend
 - name: 'gcr.io/cloud-builders/git'
   args: ['clone', "https://github.com/DevITandCo/EDUconline-backend", '/workspace/backend']
-  
 
 # Construir la imagen de Docker
 - name: 'gcr.io/cloud-builders/docker'
@@ -41,11 +40,11 @@ steps:
   - '--set-env-vars'
   - 'MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority'
 
-# Incluye la configuración del cubo de registros
+# Configuración de opciones global (incluyendo el cubo de registros y logging)
 options:
+  logging: CLOUD_LOGGING_ONLY
   build:
     logsBucket: 'gs://educonline_bucket'
-
+    
 images:
 - 'gcr.io/astral-option-412114/apieduconline'
-
