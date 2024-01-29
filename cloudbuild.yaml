@@ -43,8 +43,7 @@ steps:
 # Configuración de opciones global (incluyendo el cubo de registros y logging)
 options:
   logging: CLOUD_LOGGING_ONLY
-  build:
-    logsBucket: 'gs://educonline_bucket'
-    
+  logsBucket: 'gs://educonline_bucket'
+
 images:
 - 'gcr.io/astral-option-412114/apieduconline'
