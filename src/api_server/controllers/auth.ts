@@ -6,8 +6,9 @@ import jwt from 'jsonwebtoken'
 
 interface tmpUser {
   id: string
+  firstName: string
+  lastName: string
   email: string
-  username: string
   rank: string
 }
 
@@ -15,8 +16,9 @@ function createToken(user: tmpUser): string | jwt.JwtPayload {
   return jwt.sign(
     {
       id: user.id,
+      firstName: user.firstName, 
+      lastName: user.lastName, 
       email: user.email,
-      username: user.username,
       rank: user.rank
     },
     String(process.env.SECRET_KEY),
@@ -28,7 +30,7 @@ function createToken(user: tmpUser): string | jwt.JwtPayload {
 
 export const signUp = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, email, password } = req.body
+    const { firstName, lastName, email, password } = req.body
     const rank = 0
 
     // Verificar si el usuario ya existe por su correo electrónico
@@ -49,7 +51,8 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
     ).toString('hex')
 
     const newUser = await UserModel.create({
-      username,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
       salt,
@@ -59,7 +62,8 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
     res.status(201).json({
       data: {
         id: newUser.id,
-        username,
+        firstName, 
+        lastName,
         email,
         rank
       },
@@ -100,16 +104,18 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
 
     const token = createToken({
       id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
-      username: user.username,
       rank: user.rank
     })
 
     res.status(200).json({
       data: {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
-        username: user.username,
         rank: user.rank,
         token
       },
@@ -122,3 +128,65 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
+
+export const updateUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { 
+      id, 
+      firstName, 
+      lastName, 
+      email, 
+      password } = req.body
+
+    // Buscar el usuario por el correo electrónico
+    const existingUser = await UserModel.findByIdAndUpdate({_id: id}, {
+      id, 
+      firstName, 
+      lastName, 
+      email, 
+      password})
+    if (existingUser == null) {
+      res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
+      return
+    }
+
+    // Crear un hash de la contraseña proporcionada durante el inicio de sesión
+    const hashedPassword = pbkdf2Sync(
+      existingUser.password,
+      existingUser.salt,
+      10000,
+      64,
+      'sha512'
+    ).toString('hex')
+
+    // Comparar el hash generado con el hash almacenado en la base de datos
+    if (hashedPassword !== String(existingUser.password)) {
+      res.status(401).json({ status: setStatus(req, 401, 'Unathorized') })
+      return
+    }
+
+    const token = createToken({
+      id: existingUser.id,
+      firstName: existingUser.firstName, 
+      lastName: existingUser.lastName, 
+      email: existingUser.email,
+      rank: existingUser.rank
+    })
+
+    res.status(200).json({
+      data: {
+      id: existingUser.id,
+      firstName: existingUser.firstName, 
+      lastName: existingUser.lastName, 
+      email: existingUser.email,
+      rank: existingUser.rank,
+        token
+      },
+      status: setStatus(req, 200, 'Internal Server Error')
+    })
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: setStatus(req, 500, 'Internal Server Error') })
+  }
+}

@@ -6,9 +6,8 @@ import { validateBody } from '@/api_server/middlewares/parser'
 import { object, string } from 'yup'
 
 export const user = object().shape({
-  username: string()
-    .transform((username: string) => username.toLowerCase())
-    .optional(),
+  firstName: string().transform((firstName: string) => firstName.toLowerCase()),
+  lastName: string().transform((lastName: string) => lastName.toUpperCase()),
   email: string()
     .email()
     .transform((email: string) => email.toLowerCase()),
@@ -20,5 +19,7 @@ const router = express.Router()
 
 router.post('/sign-up', validateBody(user), authCtrl.signUp)
 router.post('/sign-in', validateBody(user), authCtrl.signIn)
+// router.post('/sign-in', validateBody(user), authCtrl.signIn)
+// router.post('/sign-in', validateBody(user), authCtrl.signIn)
 
 export default router

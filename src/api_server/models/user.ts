@@ -1,7 +1,8 @@
 import { model, Schema, Document } from 'mongoose'
 
 export interface UserDocument extends Document {
-  username: string
+  firstName: string
+  lastName: string
   email: string
   password: Buffer
   salt: Buffer
@@ -10,9 +11,12 @@ export interface UserDocument extends Document {
 
 const userSchema = new Schema<UserDocument>(
   {
-    username: {
+    firstName: {
       type: String,
-      unique: true,
+      required: true
+    },
+    lastName: {
+      type: String,
       required: true
     },
     email: {
