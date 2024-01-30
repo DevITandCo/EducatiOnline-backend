@@ -7,8 +7,12 @@ import { object, string } from 'yup'
 
 export const article = object().shape({
   title: string(),
-  description: string(),
-  content: string()
+  pathology: string(),
+  symptoms: string(),
+  contributions: string(),
+  procedures: string(),
+  additional: string(),
+  related: string(),
 })
 // -------------------------------------------
 

@@ -5,6 +5,7 @@ export interface UserDocument extends Document {
   email: string
   password: Buffer
   salt: Buffer
+  rank: string
 }
 
 const userSchema = new Schema<UserDocument>(
@@ -26,7 +27,11 @@ const userSchema = new Schema<UserDocument>(
     salt: {
       type: Buffer,
       require: true
-    }
+    },
+    rank: {
+      type: String,
+      require: true
+    },
   },
   {
     timestamps: true

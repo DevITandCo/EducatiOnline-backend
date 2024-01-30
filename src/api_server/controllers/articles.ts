@@ -4,12 +4,23 @@ import { ArticleModel } from '@/api_server/models/article'
 
 export const createArticle = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, description, content } = req.body
-    
+    const { 
+      title,
+      pathology,
+      symptoms,
+      contributions,
+      procedures,
+      additional,
+      related } = req.body
+
     const newArticle = await ArticleModel.create({
       title,
-      description,
-      content
+      pathology,
+      symptoms,
+      contributions,
+      procedures,
+      additional,
+      related 
     })
 
     res.status(201).json({
@@ -27,22 +38,34 @@ export const createArticle = async (req: Request, res: Response): Promise<void> 
 
 export const updateArticle = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, title, description, content } = req.body
-    
-    const newArticle = await ArticleModel.findByIdAndUpdate({_id: id}, {
+    const { 
       id,
       title,
-      description,
-      content
+      pathology,
+      symptoms,
+      contributions,
+      procedures,
+      additional,
+      related } = req.body
+    
+    const existingArticle = await ArticleModel.findByIdAndUpdate({_id: id}, {
+      id,
+      title,
+      pathology,
+      symptoms,
+      contributions,
+      procedures,
+      additional,
+      related
     }, {new: true})
-    if (newArticle == null) {
+    if (existingArticle == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
 
     res.status(201).json({
       data: {
-        newArticle
+        existingArticle
       },
       status: setStatus(req, 201, 'OK CREATED')
     })
@@ -76,8 +99,6 @@ export const deleteArticle = async (req: Request, res: Response): Promise<void> 
 
 export const getArticle = async (req: Request, res: Response): Promise<void> => {
   try {
-    // console.log(req.params) // is empty (?)
-    // parsing id in URL (/article/get?id=value)
     const id = req.url.split('?')[1].split('=')[1]
     
     const existingArticle = await ArticleModel.findById({_id: id})

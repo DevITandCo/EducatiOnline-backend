@@ -8,6 +8,7 @@ interface tmpUser {
   id: string
   email: string
   username: string
+  rank: string
 }
 
 function createToken(user: tmpUser): string | jwt.JwtPayload {
@@ -15,7 +16,8 @@ function createToken(user: tmpUser): string | jwt.JwtPayload {
     {
       id: user.id,
       email: user.email,
-      username: user.username
+      username: user.username,
+      rank: user.rank
     },
     String(process.env.SECRET_KEY),
     {
@@ -27,6 +29,7 @@ function createToken(user: tmpUser): string | jwt.JwtPayload {
 export const signUp = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, email, password } = req.body
+    const rank = 0
 
     // Verificar si el usuario ya existe por su correo electrónico
     const existingUser = await UserModel.findOne({ email })
@@ -49,14 +52,16 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
       username,
       email,
       password: hashedPassword,
-      salt
+      salt,
+      rank
     })
 
     res.status(201).json({
       data: {
         id: newUser.id,
         username,
-        email
+        email,
+        rank
       },
       status: setStatus(req, 201, 'Internal Server Error')
     })
@@ -96,7 +101,8 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
     const token = createToken({
       id: user.id,
       email: user.email,
-      username: user.username
+      username: user.username,
+      rank: user.rank
     })
 
     res.status(200).json({
@@ -104,6 +110,7 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
         id: user.id,
         email: user.email,
         username: user.username,
+        rank: user.rank,
         token
       },
       status: setStatus(req, 200, 'Internal Server Error')
@@ -114,3 +121,4 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
       .json({ status: setStatus(req, 500, 'Internal Server Error') })
   }
 }
+
