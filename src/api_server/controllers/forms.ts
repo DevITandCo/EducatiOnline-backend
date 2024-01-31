@@ -86,7 +86,7 @@ export const getForm = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    res.status(201).json({
+    res.status(200).json({
       data: {
         existingForm
       },
@@ -102,13 +102,13 @@ export const getForm = async (req: Request, res: Response): Promise<void> => {
 export const getForms = async (req: Request, res: Response): Promise<void> => {
   try {
 
-    const existingForm = await FormModel.find({}, 'id category author')
+    const existingForm = await FormModel.find({})
     if (existingForm == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
 
-    res.status(201).json({
+    res.status(200).json({
       data: {
         existingForm
       },
