@@ -142,21 +142,19 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
       'sha512'
     ).toString('hex')
 
-
-    // Look user by mail
     const existingUser = await UserModel.findByIdAndUpdate({_id: id}, {
       id, 
       firstName, 
       lastName, 
       email, 
-      hashedPassword
+      password: hashedPassword,
+      salt
   })
   if (existingUser == null) {
     res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
     return
   }
 
-    // Setting value in rank
     res.status(201).json({
       data: {
       id: existingUser.id,
