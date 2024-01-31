@@ -19,7 +19,10 @@ const router = express.Router()
 
 router.post('/sign-up', validateBody(user), authCtrl.signUp)
 router.post('/sign-in', validateBody(user), authCtrl.signIn)
-// router.post('/sign-in', validateBody(user), authCtrl.signIn)
-// router.post('/sign-in', validateBody(user), authCtrl.signIn)
+router.post('/update', validateBody(user), authCtrl.updateUser)
+router.post('/setRank', validateBody(user), authCtrl.updateUserRank)
+router.post('/delete', validateBody(user), authCtrl.deleteUser)
+router.get('/getAll', validateBody(user), authCtrl.getAllUsers)
+router.get('/get', validateBody(user), authCtrl.getUser)
 
 export default router
