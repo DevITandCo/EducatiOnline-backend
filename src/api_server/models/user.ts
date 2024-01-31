@@ -26,15 +26,15 @@ const userSchema = new Schema<UserDocument>(
     },
     password: {
       type: Buffer,
-      require: true
+      required: true
     },
     salt: {
       type: Buffer,
-      require: true
+      required: true
     },
     rank: {
       type: String,
-      require: true
+      required: true
     },
   },
   {

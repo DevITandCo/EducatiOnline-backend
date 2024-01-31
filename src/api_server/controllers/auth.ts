@@ -31,7 +31,6 @@ function createToken(user: tmpUser): string | jwt.JwtPayload {
 export const signUp = async (req: Request, res: Response): Promise<void> => {
   try {
     const { firstName, lastName, email, password } = req.body
-    const rank = 0
 
     // Verificar si el usuario ya existe por su correo electrónico
     const existingUser = await UserModel.findOne({ email })
@@ -51,21 +50,23 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
     ).toString('hex')
 
     const newUser = await UserModel.create({
-      firstName,
-      lastName,
-      email,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
       password: hashedPassword,
-      salt,
-      rank
+      salt: salt,
+      rank: "0"
     })
+
+    console.log(newUser)
 
     res.status(201).json({
       data: {
         id: newUser.id,
-        firstName, 
-        lastName,
-        email,
-        rank
+        firstName: newUser.firstName, 
+        lastName: newUser.lastName,
+        email: newUser.email,
+        rank: newUser.rank
       },
       status: setStatus(req, 201, 'OK CREATED')
     })

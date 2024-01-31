@@ -11,6 +11,7 @@ export const user = object().shape({
   email: string()
     .email()
     .transform((email: string) => email.toLowerCase()),
+  rank: string(),
   password: string().min(8)
 })
 // -------------------------------------------
