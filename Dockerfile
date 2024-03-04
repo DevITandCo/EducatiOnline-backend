@@ -11,7 +11,7 @@ COPY . .
 
 RUN npm install
 
-EXPOSE 8080
+EXPOSE 3000
 
 ENV MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority
 
