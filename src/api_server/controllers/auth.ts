@@ -1,8 +1,26 @@
 import { Request, Response } from 'express'
 import { setStatus } from '@/lib/utils'
 import { UserModel } from '@/api_server/models/user'
+import { ResetPasswordModel } from '@/api_server/models/resetPassword'
 import { pbkdf2Sync, randomBytes } from 'crypto'
 import jwt from 'jsonwebtoken'
+
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+require('dotenv').config()
+
+const generateForgotPasswordToken = () => {
+  return crypto.randomBytes(20).toString('hex');
+};
+
+// Create a nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: process.env.MAIL_PROXY,
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS
+  }
+});
 
 interface tmpUser {
   id: string
@@ -317,6 +335,138 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
         users
       },
       status: setStatus(req, 200, 'OK')
+    })
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: setStatus(req, 500, 'Internal Server Error') })
+  }
+}
+
+export const sendPasswordReset = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { email } = req.body;
+
+    // look in db if user exists
+    const existingUser = await UserModel.find({email: email}, 
+      {
+        password: 0,
+        salt: 0
+      })
+    if (existingUser == null) {
+      res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
+      return
+    }
+
+    const token = generateForgotPasswordToken();
+    console.log('Random Token:', token);
+
+    const valideUntilDate = new Date(Date.now() + 2 * (60 * 60 * 1000) )
+
+    // insert new reset password request in db
+    await ResetPasswordModel.create({
+      email: email,
+      token: token,
+      valideUntil: valideUntilDate
+    })
+
+    // format mail text to html
+    const url = 'http://localhost:4000'
+    const formattedText = ''
+    + 'Cher utilisateur,'
+    + '<br>'
+    + '<br>'
+    + 'Vous recevez cet e-mail parce que vous avez demandé la réinitialisation du mot de passe de votre compte.'
+    + '<br>'
+    + 'Si vous n\'avez pas demandé la réinitialisation de votre mot de passe, veuillez ignorer cet e-mail. Votre compte restera sécurisé.'
+    + '<br>'
+    + '<br>'
+    + 'Pour réinitialiser votre mot de passe et retrouver l\'accès à votre compte, veuillez cliquer sur le lien ci-dessous :'
+    + '<br>'
+    + '<a href=' + url + '/reset-password?token=' + token + '>'
+    + url + '/reset-password?token=' + token
+    + '</a>'
+    + '<br>'
+    + '<br>'
+    + '-- L\'équipe EducOnline --'
+    + '<br>'
+    + 'Note: Ce lien de réinitialisation du mot de passe est valable pendant 2 heures.' 
+    + 'Si vous rencontrez des problèmes ou si vous avez besoin d\'une assistance supplémentaire, veuillez contacter notre équipe d\'assistance à l\'adresse ci-dessous :' 
+    + '<br>'
+    + '<a href="mailto:contact.educonline@gmail.com">contact.educonline@gmail.com</a>'
+
+    // prepare mail
+    const mailOptions = {
+      from: 'contact.educonline@gmail.com',
+      to: email,
+      subject: 'Password Reset',
+      html: formattedText
+    };
+
+    // send mail object
+    transporter.sendMail(mailOptions, (error: Error | null, info: any) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send('Error sending password reset email');
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(201).json({
+          status: setStatus(req, 201, 'OK CREATED')
+        })
+      }
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: setStatus(req, 500, 'Internal Server Error') })
+  }
+}
+
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // store id from request body
+    const {token, new_password} = req.body
+
+    // look in db if reset password request exists
+    const request = await ResetPasswordModel.findOne({token: token}, {})
+    if (request == null) {
+      res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
+      return
+    }
+
+    // check time passed between token generation and token use
+    const timePassed = new Date().getTime() - request.valideUntil.getTime()
+    const timeLimit = 2 * (60 * 60 * 1000)
+    if (timePassed > timeLimit) {
+      res.status(401).json({ status: setStatus(req, 401, 'Unauthorized') })
+      return
+    }
+
+    // create a new hashed passowrd with new password and a new salt
+    const salt = randomBytes(32).toString('hex')
+    const newHashedPassword = pbkdf2Sync(
+      new_password,
+      salt,
+      10000,
+      64,
+      'sha512'
+    ).toString('hex')
+
+    // update user password in db
+    await UserModel.findOneAndUpdate({email: request.email}, {
+      password: newHashedPassword,
+      salt: salt
+    })
+
+    // delete token in db
+    await ResetPasswordModel.findOneAndDelete({token: token}, {})
+    if (request == null) {
+      res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
+      return
+    }
+
+    res.status(201).json({
+      status: setStatus(req, 201, 'OK CREATED')
     })
   } catch (error) {
     res
