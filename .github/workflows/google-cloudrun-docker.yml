@@ -43,6 +43,9 @@ jobs:
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
 
+    - name: Set MongoDB URI as environment variable
+      run: echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> $GITHUB_ENV
+
     - name: Deploy to Google Cloud Run
       run: |
         gcloud run deploy educonline-backend \
