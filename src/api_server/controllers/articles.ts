@@ -123,15 +123,15 @@ export const getArticle = async (req: Request, res: Response): Promise<void> => 
 export const getArticles = async (req: Request, res: Response): Promise<void> => {
   try {
 
-    const existingArticle = await ArticleModel.find({}, 'id title')
-    if (existingArticle == null) {
+    const existingArticles = await ArticleModel.find({}, 'id title')
+    if (existingArticles == null) {
       res.status(404).json({ status: setStatus(req, 404, 'Not Found') })
       return
     }
 
     res.status(200).json({
       data: {
-        existingArticle
+        articles: existingArticles
       },
       status: setStatus(req, 200, 'OK')
     })
