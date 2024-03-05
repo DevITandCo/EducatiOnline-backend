@@ -371,7 +371,7 @@ export const sendPasswordReset = async (req: Request, res: Response): Promise<vo
     })
 
     // format mail text to html
-    const url = 'http://localhost:4000'
+    const url = 'https://educonline-frontend-vkhphrdymq-uc.a.run.app'
     const formattedText = ''
     + 'Cher utilisateur,'
     + '<br>'
