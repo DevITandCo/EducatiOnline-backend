@@ -15,10 +15,10 @@ const generateForgotPasswordToken = () => {
 
 // Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: process.env.MAIL_PROXY,
+  service: process.env.MAIL_PROXY+'',
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS
+    user: process.env.MAIL_USER+'',
+    pass: process.env.MAIL_PASS+''
   }
 });
 
