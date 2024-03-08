@@ -5,6 +5,7 @@ RUN addgroup -S nodejs && adduser -S express -G nodejs
 
 WORKDIR /usr/src/app
 
+COPY . .
 
 RUN --mount=type=secret,id=mongodb_uri \
     sed -i "s/MONGODB_URI=/MONGODB_URI=$(cat /run/secrets/mongodb_uri)/" .env.production
@@ -20,7 +21,7 @@ RUN --mount=type=secret,id=mail_proxy \
 
 RUN chown -R express:nodejs /usr/src/app    
 
-COPY . .
+
 
 RUN npm install
 
