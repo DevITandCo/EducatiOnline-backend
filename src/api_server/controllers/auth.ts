@@ -16,7 +16,7 @@ const generateForgotPasswordToken = () => {
 // Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_PROXY,
-  port: 587,
+  port: 465,
   secure:false,
   auth: {
     user: process.env.MAIL_USER,
