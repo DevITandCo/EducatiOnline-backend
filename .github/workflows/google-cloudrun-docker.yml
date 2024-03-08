@@ -24,18 +24,12 @@ jobs:
       run: |
         gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io/${{ secrets.GCP_PROJECT_ID }}
 
-
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
         tags: "gcr.io/${{ secrets.GCP_PROJECT_ID }}/educonline-backend:${{ github.sha }}"
-        build-args: |
-          MONGODB_URI=${{ secrets.MONGODB_URI }}
-          MAIL_USER=${{ secrets.MAIL_USER }}
-          MAIL_PASS=${{ secrets.MAIL_PASS }}
-          MAIL_PROXY=${{ secrets.MAIL_PROXY }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,6 +43,12 @@ jobs:
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
 
+    - name: Set MongoDB URI and Email Config as environment variables
+      run: |
+        echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> $GITHUB_ENV
+        echo "MAIL_USER=${{ secrets.MAIL_USER }}" >> $GITHUB_ENV
+        echo "MAIL_PASS=${{ secrets.MAIL_PASS }}" >> $GITHUB_ENV
+        echo "MAIL_PROXY=${{ secrets.MAIL_PROXY }}" >> $GITHUB_ENV
 
     - name: Deploy to Google Cloud Run
       run: |
