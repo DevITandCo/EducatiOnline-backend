@@ -11,9 +11,9 @@ COPY . .
 
 RUN npm install
 
-EXPOSE 3000 587
+EXPOSE 3000 465
 
-ENV MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority
+# ENV MONGODB_URI=mongodb+srv://admin:HPvzCfgcWT1K0XuA@cluster.ukkr5pz.mongodb.net/?retryWrites=true&w=majority
 
 # Switch to the non-root user before running the app
 USER express
