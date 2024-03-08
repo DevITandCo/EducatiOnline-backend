@@ -8,16 +8,16 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN --mount=type=secret,id=mongodb_uri \
-    sed -i "s/MONGODB_URI=/MONGODB_URI=$(cat /run/secrets/mongodb_uri)/" .env.production
+    sed -i "s/MONGODB_URI=/MONGODB_URI=$(cat \/run\/secrets\/mongodb_uri | tr -d '\n')/" .env.production
 
 RUN --mount=type=secret,id=mail_user \
-    sed -i "s/MAIL_USER=/MAIL_USER=$(cat /run/secrets/mail_user)/" .env.production
+    sed -i "s/MAIL_USER=/MAIL_USER=$(cat \/run\/secrets\/mail_user | tr -d '\n')/" .env.production
     
 RUN --mount=type=secret,id=mail_pass \
-    sed -i "s/MAIL_PASS=/MAIL_PASS=$(cat /run/secrets/mail_pass)/" .env.production
+    sed -i "s/MAIL_PASS=/MAIL_PASS=$(cat \/run\/secrets\/mail_pass | tr -d '\n')/" .env.production
     
 RUN --mount=type=secret,id=mail_proxy \
-    sed -i "s/MAIL_PROXY=/MAIL_PROXY=$(cat /run/secrets/mail_proxy)/" .env.production
+    sed -i "s/MAIL_PROXY=/MAIL_PROXY=$(cat \/run\/secrets\/mail_proxy | tr -d '\n')/" .env.production
 
 RUN chown -R express:nodejs /usr/src/app    
 
