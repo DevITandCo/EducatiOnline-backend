@@ -25,11 +25,16 @@ jobs:
         gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin gcr.io/${{ secrets.GCP_PROJECT_ID }}
 
     - name: Build and Push Docker Image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v4
       with:
         context: .
         push: true
         tags: "gcr.io/${{ secrets.GCP_PROJECT_ID }}/educonline-backend:${{ github.sha }}"
+        secrets: |
+            "mongodb_uri=${{ secrets.MONGODB_URI }}"
+            "mail_user=${{ secrets.MAIL_USER }}"
+            "mail_pass=${{ secrets.MAIL_PASS }}"
+            "mail_proxy=${{ secrets.MAIL_PROXY }}"
 
   deploy:
     runs-on: ubuntu-latest
